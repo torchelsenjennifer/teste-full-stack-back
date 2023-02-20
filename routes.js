@@ -2,7 +2,7 @@ import { Router, json } from 'express'
 import cors from 'cors'
 
 import { produtoIndex, produtoStore } from './controllers/ProdutoController.js'
-import { categoriaIndex } from './controllers/CategoriaController.js'
+import { categoriaIndex, categoriaStore } from './controllers/CategoriaController.js'
 
 const router = Router()
 router.use(json())
@@ -14,5 +14,6 @@ router.get('/produto', produtoIndex)
 
 // define as rotas do cadastro das categorias
 router.get('/categoria', categoriaIndex)
+      .post('/categoria', categoriaStore)
 
 export default router
