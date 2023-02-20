@@ -7,7 +7,7 @@ import routes from './routes.js'
 app.use(routes)
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Loja de produtos referente a categoria')
 })
 
 app.listen(port, () => {
