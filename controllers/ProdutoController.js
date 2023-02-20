@@ -66,3 +66,18 @@ export const produtoUpdate = async (req, res) => {
     res.status(400).json({ id: 0, msg: "Erro: " + error.message });
   }
 };
+
+//========================================================================================================
+//DELETE
+export const produtoDelete = async (req, res) => {
+
+  const { id } = req.params;
+
+  try {
+    await dbKnex("produto").where({ id }).del()
+    res.status(200).json({ id, msg: "Ok! Produto excluído com sucesso!" })
+  } catch (error) {
+    res.status(400).json({ id: 0, msg: "Erro: " + error.message })
+  }
+}
+
