@@ -4,7 +4,7 @@ import dbKnex from "../dados/db_config.js";
 export const produtoIndex = async (req, res) => {
   try {
     const compra = await dbKnex
-      .select("p.*", "c.nome as nomeCategoria")
+      .select("p.*", "c.nome as categoria")
       .from("produto as p")
       .innerJoin("categoria as c", { "p.categoria_id": "c.id" });
     res.status(200).json(compra);
@@ -16,14 +16,14 @@ export const produtoIndex = async (req, res) => {
 //========================================================================================================
 //CREATE
 export const produtoStore = async (req, res) => {
-  const { nome, descricao, preco, categoria_id } = req.body;
+  const { nome, descricao, preco, categoria_id, foto } = req.body;
 
-  if (!nome || !descricao || !preco || !categoria_id) {
+  if (!nome || !descricao || !preco || !categoria_id || !foto) {
     res
       .status(400)
       .json({
         id: 0,
-        msg: "Erro... informe nome, descrição, preço e número da categoria",
+        msg: "Erro... informe nome, descrição, foto, preço e id da categoria",
       });
     return;
   }
@@ -34,6 +34,7 @@ export const produtoStore = async (req, res) => {
       descricao,
       preco,
       categoria_id,
+      foto
     });
     res
       .status(201)
@@ -48,18 +49,18 @@ export const produtoStore = async (req, res) => {
 export const produtoUpdate = async (req, res) => {
   const { id } = req.params;
 
-  const { nome, descricao, preco, categoria_id } = req.body;
+  const { nome, descricao, preco, categoria_id, foto } = req.body;
 
-  if (!nome || !descricao || !preco || !categoria_id) {
+  if (!nome || !descricao || !preco || !categoria_id || !foto) {
     res.status(400).json({
       id: 0,
-      msg: "Erro... informe nome, descricao, preço e numero da categoria!",
+      msg: "Erro... informe nome, descricao, preço, foto e id da categoria!",
     });
     return;
   }
 
   try {
-    await dbKnex("produto").where({ id }).update({ nome, descricao, preco });
+    await dbKnex("produto").where({ id }).update({ nome, descricao, preco, foto, categoria_id });
 
     res.status(200).json({ id, msg: "Ok! Alterado com sucesso" });
   } catch (error) {
