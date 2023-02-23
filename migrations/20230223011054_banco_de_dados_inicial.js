@@ -11,7 +11,9 @@ export function up(knex) {
           table.string('descricao',50).notNullable();
           table.decimal('preco', 10,2).notNullable();
           table.string('foto',255).notNullable();
+          table.foreign('categoria_id').references('categoria.id');
       });
+      
   }
   
   export function down(knex) {
