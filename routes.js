@@ -1,7 +1,7 @@
 import { Router, json } from 'express'
 import cors from 'cors'
 
-import { produtoDelete, produtoIndex, produtoStore, produtoUpdate } from './controllers/ProdutoController.js'
+import { buscarProduto, produtoDelete, produtoIndex, produtoStore, produtoUpdate } from './controllers/ProdutoController.js'
 import { categoriaDelete, categoriaIndex, categoriaStore, categoriaUpdate } from './controllers/CategoriaController.js'
 
 const router = Router()
@@ -13,6 +13,7 @@ router.get('/produto', produtoIndex)
       .post('/produto', produtoStore)
       .put('/produto/:id', produtoUpdate)
       .delete('/produto/:id', produtoDelete )
+      .get('/produto/:id', buscarProduto )
       
 
 // define as rotas do cadastro das categorias

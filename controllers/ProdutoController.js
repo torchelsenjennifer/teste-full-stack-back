@@ -19,12 +19,10 @@ export const produtoStore = async (req, res) => {
   const { nome, descricao, preco, categoria_id, foto } = req.body;
 
   if (!nome || !descricao || !preco || !categoria_id || !foto) {
-    res
-      .status(400)
-      .json({
-        id: 0,
-        msg: "Erro... informe nome, descrição, foto, preço e id da categoria",
-      });
+    res.status(400).json({
+      id: 0,
+      msg: "Erro... informe nome, descrição, foto, preço e id da categoria",
+    });
     return;
   }
 
@@ -34,7 +32,7 @@ export const produtoStore = async (req, res) => {
       descricao,
       preco,
       categoria_id,
-      foto
+      foto,
     });
     res
       .status(201)
@@ -60,7 +58,9 @@ export const produtoUpdate = async (req, res) => {
   }
 
   try {
-    await dbKnex("produto").where({ id }).update({ nome, descricao, preco, foto, categoria_id });
+    await dbKnex("produto")
+      .where({ id })
+      .update({ nome, descricao, preco, foto, categoria_id });
 
     res.status(200).json({ id, msg: "Ok! Alterado com sucesso" });
   } catch (error) {
@@ -71,14 +71,33 @@ export const produtoUpdate = async (req, res) => {
 //========================================================================================================
 //DELETE
 export const produtoDelete = async (req, res) => {
-
   const { id } = req.params;
 
   try {
-    await dbKnex("produto").where({ id }).del()
-    res.status(200).json({ id, msg: "Ok! Produto excluído com sucesso!" })
+    await dbKnex("produto").where({ id }).del();
+    res.status(200).json({ id, msg: "Ok! Produto excluído com sucesso!" });
   } catch (error) {
-    res.status(400).json({ id: 0, msg: "Erro: " + error.message })
+    res.status(400).json({ id: 0, msg: "Erro: " + error.message });
   }
-}
+};
+//========================================================================================================
+//Buscar
+export const buscarProduto = async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    const produto = await dbKnex
+      .select("p.*", "c.nome as categoria")
+      .from("produto as p")
+      .where("p.id", id)
+      .innerJoin("categoria as c", { "p.categoria_id": "c.id" });
+
+    if (produto.length === 0) {
+      res.status(404).json({ msg: "Erro: Não encontrado!" });
+    }
+
+    res.status(200).json(produto[0]);
+  } catch (error) {
+    res.status(400).json({ id: 0, msg: "Erro: " + error.message });
+  }
+};
